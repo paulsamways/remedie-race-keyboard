@@ -13,13 +13,14 @@ struct PK {
 };
 
 int pkSize = sizeof pk / sizeof pk[0];
-uint8_t s = 0;
+uint8_t s = (1<<pkSize)-1;
 
 void setup() {
-  Serial.begin(115200);
+  pinMode(D9, OUTPUT);
+  digitalWrite(D9, LOW);
 
   for (int j = 0; j < pkSize; j++) {
-    pinMode(pk[j].pin, INPUT_PULLDOWN);
+    pinMode(pk[j].pin, INPUT_PULLUP);
   }
   
   bleKeyboard.begin();
@@ -33,19 +34,16 @@ void loop() {
     int p = (s & (1 << i)) > 0;
     int p2 = digitalRead(k.pin);
     
-    if (p != p2) {
+    if (p != p2) {      
       s ^= (1 << i);
-  
-      if (p2) {
-        Serial.print("Button on pin ");
-        Serial.print(k.pin);
-        Serial.print(" pressed, sending ");
-        Serial.println((char)k.key);
- 
+      
+      if (!p2) {
         if(bleKeyboard.isConnected()) {
           bleKeyboard.write(k.key);
         }
       }
     }
-  }
+  }  
+
+  digitalWrite(D9, s != (1<<pkSize)-1);
 }

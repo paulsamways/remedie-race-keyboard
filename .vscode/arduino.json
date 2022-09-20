@@ -1,7 +1,7 @@
 {
     "configuration": "FlashFreq=80,UploadSpeed=921600,PartitionScheme=default,DebugLevel=none",
     "board": "firebeetle32:esp32:firebeetle32",
-    "port": "COM3",
+    "port": "COM7",
     "sketch": "main\\main.ino",
     "output": "out"
 }
